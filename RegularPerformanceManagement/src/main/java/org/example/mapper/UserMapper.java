@@ -19,7 +19,7 @@ public interface UserMapper {
     @Insert("insert into code(phone,code) values(#{phone},#{code})")
     void addCode(Code code);
     //获取验证码
-    @Select("select phone,code,update_time as updateTime from code where phone=#{phone}")
+    @Select("select * from code where phone=#{phone}")
     Code getCode(String phone);
     //更新验证码
     @Update("update code set code=#{code} where phone=#{phone}")

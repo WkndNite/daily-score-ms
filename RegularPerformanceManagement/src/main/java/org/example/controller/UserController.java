@@ -175,4 +175,8 @@ public class UserController {
             return Result.error("短信验证码发送失败");
         }
     }
+
+    //删除一个用户
+
+    //修改用户的个人信息
 }
