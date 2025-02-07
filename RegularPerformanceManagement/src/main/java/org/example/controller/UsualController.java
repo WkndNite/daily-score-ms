@@ -66,14 +66,14 @@ public class UsualController {
             usuals=usualService.getUsual(courseId);
         }catch (Exception e){
             System.out.println(e.getMessage());
-            return Result.error("获取课程的平时成绩组成部分的信息失败");
+            return Result.error("查询失败");
         }
         return Result.success(usuals);
     }
 
     //修改一个平时成绩组成部分
     @PostMapping("/usual/update")
-    public Result updateUsual(@RequestBody UsualUpdate usualUpdate, BindingResult bindingResult){
+    public Result updateUsual(@Validated @RequestBody UsualUpdate usualUpdate, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return Result.error(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
         }

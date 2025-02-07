@@ -87,11 +87,18 @@ public class CourseController {
     //返回一个老师的所有课程
     @GetMapping("/course/get")
     public Result getCourse(@RequestHeader(name = "token") String token) {
+        List<Course> courses;
         //获取请求头中的用户名
-        Map<String,Object> map = JwtUtil.parseToken(token);
-        String username=map.get("username").toString();
+        try{
+            Map<String,Object> map = JwtUtil.parseToken(token);
+            String username=map.get("username").toString();
 
-        List<Course> courses=courseService.getCourses(username);
+            courses=courseService.getCourses(username);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return Result.error("查询课程信息失败");
+        }
+
         return Result.success(courses);
     }
 

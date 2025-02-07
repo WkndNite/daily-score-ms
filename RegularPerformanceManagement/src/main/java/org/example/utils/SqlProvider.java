@@ -10,9 +10,9 @@ public class SqlProvider {
         return "create table "+tableName+" (\n" +
                 "    id varchar(16) primary key ,\n" +
                 "    name varchar(20) not null ,\n" +
-                "    college varchar(50) ,\n" +
-                "    speciality varchar(50) ,\n" +
-                "    gender varchar(2) ,\n" +
+                "    college varchar(50) default \" \",\n" +
+                "    speciality varchar(50) default \" \",\n" +
+                "    gender varchar(2) default \" \",\n" +
                 "    sign_total float ,\n" +
                 "    homework_total float ,\n" +
                 "    experiment_total float ,\n" +
