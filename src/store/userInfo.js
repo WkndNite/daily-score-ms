@@ -7,11 +7,15 @@ export const useUserStore = defineStore('user', {
       phone: '',
       identity: '',
       token: '',
-    }
+    },
+    loginTime: 0,
   }),
   actions: {
-    saveUserInfo(userInfo) {
+    setUserInfo(userInfo) {
       this.userInfo = userInfo
+    },
+    setLoginTime(loginTime) {
+      this.loginTime = loginTime 
     }
   }
 })

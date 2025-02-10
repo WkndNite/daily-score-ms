@@ -121,6 +121,7 @@ import { register } from '@/api/register'
 import { loginAccount } from '@/api/login'
 import { loginPhone } from '@/api/loginPhone'
 import { useUserStore } from '@/store/userInfo'
+import { useRouter } from 'vue-router'
 
 const model = defineModel('type')
 
@@ -290,6 +291,7 @@ const submit = () => {
 }
 
 const userStore = useUserStore()
+const router = useRouter()
 
 const loginAccountReq = async () => {
 	console.log('登录请求')
@@ -309,8 +311,12 @@ const loginAccountReq = async () => {
         identity: response.data.identity,
 				token: response.data.token,
       }
-			userStore.saveUserInfo(userInfo)
-			console.log('userInfo:', userStore.userInfo)
+			userStore.setUserInfo(userInfo)
+			
+			const loginTime = new Date()
+			userStore.setLoginTime(loginTime);
+
+			router.push('/dashboard')
 		}else {
 			ElMessage.error('登录失败')
 		}
@@ -337,7 +343,8 @@ const loginPhoneReq = async () => {
         identity: response.data.identity,
 				token: response.data.token,
       }
-			userStore.saveUserInfo(userInfo)
+			userStore.setUserInfo(userInfo)
+			router.push('/dashboard')
 		}else {
 			ElMessage.error('登录失败')
 		}
@@ -358,7 +365,12 @@ const registerReq = async () => {
 	try {
 		const response = await register(payload)
 		console.log(response)
-		response.code === 1 ? ElMessage.success('注册成功') : ElMessage.error('注册失败')
+		if(response.code === 1) {
+			ElMessage.success('注册成功')
+			router.push('/login')	
+		} else {
+			ElMessage.error('注册失败')
+		}
 	} catch (error) {
 		ElMessage.error('注册失败')
 	}

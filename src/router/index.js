@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import DashboardPage from '@/views/DashboardPage.vue'
+import { useUserStore } from '@/store/userInfo'
 
 const routes = [
   {
@@ -64,19 +65,29 @@ const router = createRouter({
 	routes,
 })
 
-// router.beforeEach((to, from, next) => {
-//   // 获取用户信息
-// 应该是从仓库获取 开发过程可以模拟本地存储
-//   const userInfo = localStorage.getItem('userInfo')
-//   if (userInfo) {
-//     next()
-//   } else {
-//     if (to.path === '/login') {
-//       next()
-//     } else {
-//       next('/login')
-//     }
-//   }
-// })
+const userStore = useUserStore()
+
+router.beforeEach((to, from, next) => {
+  // 获取用户信息
+  // 应该是从仓库获取 开发过程可以模拟本地存储
+  const userInfo = userStore.userInfo
+  const loginTime = userStore.loginTime
+  
+  if (userInfo && userInfo.token) {
+    const currentTime = Date.now();
+    const oneHourInMillis = 60 * 60 * 1000; // token有效期为1小时
+    if (currentTime - loginTime > oneHourInMillis) {
+      next('/login')
+    } else {
+      next()	
+    }
+  } else {
+    if (to.path === '/login') {
+      next()
+    } else {
+      next('/login')
+    }
+  }
+})
 
 export default router
