@@ -247,9 +247,11 @@ const sendMsg = async (phone) => {
 			return
 		}
 		const response = await sendCode({ phone })
+    console.log(response)
 		sendCodeAccess.value = false
 		let timer = setInterval(() => {
 			if(sendCodeTimer.value === 0) {
+        sendCodeAccess.value = true
 				sendCodeTimer.value = 60
 				clearInterval(timer)
 				return
