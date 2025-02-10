@@ -105,7 +105,7 @@
 			</div>
 			<div class="message-login" v-if="model === 'accountLogin'">
 				<el-divider direction="horizontal" content-position="center">或者</el-divider>
-				<el-button circle @click="switchForm('codeLogin')">
+				<el-button circle @click="switchForm('codeLogin')" title="短信登录">
 					<el-icon><ChatDotSquare /></el-icon>
 				</el-button>
 			</div>
@@ -118,6 +118,9 @@ import { ref, computed } from 'vue'
 import { ChatDotSquare, User, Lock, Phone } from '@element-plus/icons-vue'
 import { sendCode } from '@/api/sendCode'
 import { register } from '@/api/register'
+import { loginAccount } from '@/api/login'
+import { loginPhone } from '@/api/loginPhone'
+import { useUserStore } from '@/store/userInfo'
 
 const model = defineModel('type')
 
@@ -286,12 +289,61 @@ const submit = () => {
 	})
 }
 
+const userStore = useUserStore()
+
 const loginAccountReq = async () => {
 	console.log('登录请求')
+	const { username, password, phone } = form.value
+	const payload = {
+		username,
+		password,
+	}
+	try{
+		const response = await loginAccount(payload)
+		console.log(response)
+		if(response.code === 1) {
+			ElMessage.success('登录成功')
+			const userInfo = {
+        username,
+        phone,
+        identity: response.data.identity,
+				token: response.data.token,
+      }
+			userStore.saveUserInfo(userInfo)
+			console.log('userInfo:', userStore.userInfo)
+		}else {
+			ElMessage.error('登录失败')
+		}
+	}catch(error) {
+		ElMessage.error('登录失败')
+	}
 }
 
 const loginPhoneReq = async () => {
 	console.log('短信登录请求')
+	const { username, phone, code } = form.value
+	const payload = {
+		phone,
+		code,
+	}
+	try {
+		const response = await loginPhone(payload)
+		console.log(response)
+		if(response.code === 1) {
+			ElMessage.success('登录成功')
+			const userInfo = {
+        username,
+        phone,
+        identity: response.data.identity,
+				token: response.data.token,
+      }
+			userStore.saveUserInfo(userInfo)
+		}else {
+			ElMessage.error('登录失败')
+		}
+	} catch (error) {
+		ElMessage.error('登录失败')
+	}
 }
 
 const registerReq = async () => {
